@@ -1,0 +1,37 @@
+노드 내장 모듈
+
+os
+- 운영체제의 정보를 담고 있음
+- 모듈은 require로 가져옴 (내장 모듈이라 경로 대신 이름만 적어줘도 됨)
+- const os = require('os') 와 같이 가져와서 os.uptime(); 과 같이 씀
+
+- os.arch(): process.arch 와 동일
+- os.platform(): process.platform 와 동일
+- os.type(): 운영체제의 종류
+- os.uptime(): 운영체제 부팅 이후 흐른 시간
+- os.hostname(): 컴퓨터의 이름
+- os.release(): 운영체제의 버전
+- os.homedir(): 홈 디렉터리 경로
+- os.tmpdir(): 임시 파일 저장 경로
+- os.cpus(): 컴퓨터의 코어 정보. 서버를 띄울 때 cpu 를 확인해서 효율적으로 서버를 구성하기 위해서 이걸 사용함
+- os.totalmem(): 전체 메모리 용량
+- os.freemem(): 사용 가능한 메모리
+
+path
+- 폴더와 파일의 경로를 쉽게 조작하도록 도와주는 모듈
+- 운영체제별로 경로 구분자가 다름(Windows: '\', POSIX: '/') > mac, linux 를 합쳐서 POSIX 라고 함
+- 운영체제마다 다른 경로 구분자를 path 모듈이 알아서 처리해준다.
+
+- path.sep: 경로의 구분자
+- path.delimiter: 환경 변수의 구분자
+- path.join(__dirname, 'var.js'): 현재 폴더 경로에 var.js를 붙여준다. 절대경로를 붙여도 무시된다.
+- path.resolve(__dirname, '..', '/var.js'): 절대경로를 붙이면 절대경로에 생성된다. 앞에 붙은 경로가 무시된다.
+- path.dirname(): 파일이 위치한 폴더 경로
+- path.basename(): 파일의 이름
+- path.format(): path.parse()한 객체를 파일 경로로 합침
+- path.normalize(): 경로 확장자를 여러번 사용하거나 혼용했을 때 정상적인 경로로 변환
+- path.isAbsolute(): 파일 경로가 절대경로인지 상대경로인지 true false로 알려줌
+- path.relative() > 파일끼리 이동하는 방법
+
+- \\ 경로가 쓰인 경우는 자바스크립트 문자열 안에서 \가 특수분자라 \\로 이스케이프 해준 것
+- 윈도우에서 POSIX path 사용하고 싶다면 path.posix 객체 사용
