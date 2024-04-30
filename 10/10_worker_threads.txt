@@ -9,3 +9,5 @@ worker_threads
 - 메인 스레드에서는 new Worker를 통행 현재 파일(__filename)을 워커 스레드에서 실행시킴. (다른 파일 경로를 넣어서도 가능)
 - worker.postMessage로 부모에서 워커로 데이터를 보냄
 - parentPort.on('Message')로 부모로부터 데이터를 받고 postMessage로 데이터를 보냄
+
+- 워커스레드는 노드 말고 다른 언어로 짜는 것을 추천
