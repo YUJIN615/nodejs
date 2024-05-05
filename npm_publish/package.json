@@ -1,0 +1,14 @@
+{
+  "name": "npmtest-0505",
+  "version": "1.0.0",
+  "description": "npm publish test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "npmtest-0505": "^1.0.0"
+  }
+}
