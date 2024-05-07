@@ -1,10 +1,55 @@
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
 const app = express();
 
 // 서버에 port 속성을 설정한다. 전역 변수같은 역할
 // SET PORT=80 과 같이 터미널에 입력해서 설정할 수 있지만 그러면 기본값이 바뀌기 때문에 사용을 지양한다.
 app.set('port', process.env.PORT || 3000);
+
+// 클라이언트에서 어떤 응답이 왔는지 알려준다.
+// app.use(morgan('dev')) 와 같이 쓴다.
+// dev 대신 combined 쓰면 더 자세히 알려줌
+app.use(morgan('combined'));
+
+// 쿠키를 파싱해준다,
+// 값을 넣으면 암호화된다.
+app.use(cookieParser('cookiePassword'));
+
+// body-parser 역할
+app.use(express.json()); // req.body로 읽어올 수 있게 해준다.
+
+// 클라이언트에서 form을 submit 한 데이터를 파싱
+// extended 가 true면 qs 모듈, flase면 querystring. qs을 권장
+app.use(express.urlencoded({ extended : true }));
+
+// 정적 파일을 보내준다.
+// app.use('요청 경로', express.static('실제 경로'));
+app.use('/', express.static(__dirname, 'public'));
+
+app.use('/', (req, res, next) => {
+  // 미들웨어 안에 미들웨어 넣기 > 미들웨어를 확장하는 방법
+  if (req.session.id) {
+    // 로그인을 했을 때만 static을 실행한다.
+    express.static(__dirname, 'public')(req, res, next);
+  } else {
+    next();
+  }
+})
+
+// session 객체가 생긴다.
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: 'cookiePassword',
+  cookie: {
+    httpOnly: true
+  },
+  name: 'connect.sid'
+}));
 
 // use 미들웨어.
 // 주소를 안쓰면 모든 요청에 실행되고, 주소를 쓰면 그 주소에서만 실행된다.
@@ -14,7 +59,7 @@ app.use((req, res, next) => {
   // throw new Error('에러가 났어요')
 
   try {
-    console.log(abc);
+    // console.log(abc);
   } catch (error) {
     console.log('error');
     // try~catch문에서 에러 발생하면 next로 에러를 넘긴다.
@@ -35,6 +80,25 @@ app.use('/about', (req, res, next) => {
 // http 메서드와 url
 // 메서드별로 나눠서 코드를 실행할 수 있다.
 app.get('/', (req, res) => {
+  req.cookies // 알아서 파싱이 된다.
+  req.signedCookies(); // 암호화된 쿠키는 signedCookies로 받아온다.
+  req.body.name;
+  req.session; // 관
+  req.session.id = 'hello'
+
+  // 쿠키 설정하기
+  res.cookie('name', encodeURIComponent(name), {
+    expires: new Date(),
+    httpOnly: true,
+    path: '/'
+  });
+
+  // 쿠키 지우기
+  res.clearCookie('name', encodeURIComponent(name), {
+    httpOnly: true,
+    path: '/'
+  })
+
   // res.writeHead() 와 res.end() 가 합쳐진 것이 express의 res.send() 이다.
 
   // 하나의 라우터에서 res.send, res.sendFile, res.json 등을 여러개 사용하면 에러가 난다.
