@@ -1,0 +1,4 @@
+멀티파트 데이터 형식
+- form 태그의 enctype이 multipart/form-data인 경우
+- body-parse로는 요청 본문을 해석할 수 없음
+- multer 패키지 필요
